@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/wingcss@1.0.0-beta/dist/wing.min.css" />
+    <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <style type="text/css">
+
+      #input {
+        font-size: 2rem;
+      }
+
+      #showing-area {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60rem;
+        max-width: 90%;
+        margin: auto;
+        border: .4rem solid #777689;
+        border-radius: 1rem;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+      }
+
+      #showing-area:before {
+        content: 'result will show here';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        line-height: 1;
+        text-align: center;
+        font-size: 3rem;
+        transform: translateY(-50%);
+        color: #777689;
+
+      }
+      #showing-area:after {
+        content: '';
+        display: block;
+        padding-top: 100%;
+      }
+      #showing-area > canvas {
+        position: absolute;
+      }
+      #showing-area > img {
+        position: absolute;
+        top: 3%;
+        left: 3%;
+        width: 94%;
+        height: 94%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <input id="input" type="text" placeholder="Plain Text Here" />
+      <div id="showing-area"></div>
+    </div>
+    <script type="text/javascript">
+
+      (function() {
+
+        // grabbing element
+        var input = document.getElementById('input');
+        var showingArea = document.getElementById('showing-area');
+
+        // variables and objects
+        var qrCodeGenerator = new QRCode('showing-area', {
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        var updateQrCode = function(value) {
+          qrCodeGenerator.clear();
+          if (value) { qrCodeGenerator.makeCode(value); }
+
+          // seems like the clear() method isn't working (nothing happened after run that clear code), I am going to manually clearing the code
+          var imgs = showingArea.getElementsByTagName('img');
+          if (imgs && imgs[0]) {
+            imgs[0].style.opacity = value ? 1 : 0;
+          }
+        };
+
+        // add event listeners
+        input.addEventListener('input', function(event) {
+          console.log('input', event.target.value);
+          updateQrCode(event.target.value || '');
+        });
+
+      })();
+
+    </script>
+  </body>
+</html>
